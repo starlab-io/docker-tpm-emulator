@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM starlabio/ubuntu-native-build:20
 MAINTAINER Doug Goldstein <doug@starlab.io>
 
 # bring in dependencies
@@ -10,8 +10,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists* /tmp/* /var/tmp/*
 
 # tpm-emulator
-RUN git clone https://github.com/PeterHuewe/tpm-emulator.git
-RUN cd tpm-emulator && \
+RUN git clone https://github.com/PeterHuewe/tpm-emulator.git && \
+    cd tpm-emulator && \
     mkdir build && \
     cd build && \
     cmake ../ && \
@@ -27,10 +27,8 @@ ENV TCSD_USE_TCP_DEVICE=1
 EXPOSE 2412
 
 # tpm2-emulator
-RUN curl -sSfL https://sourceforge.net/projects/ibmswtpm2/files/ibmtpm974.tar.gz/download > ibmtpm974.tar.gz && \
-    mkdir ibmtpm && \
-    cd ibmtpm && \
-    tar -zxf ../ibmtpm974.tar.gz && \
+ADD ibmtpm974.tar.gz ibmtpm
+RUN cd ibmtpm && \
     cd src && \
     make && \
     mv tpm_server /usr/local/bin/ && \
@@ -38,20 +36,18 @@ RUN curl -sSfL https://sourceforge.net/projects/ibmswtpm2/files/ibmtpm974.tar.gz
     rm -rf ibmtpm ibmtpm974.tar.gz
 
 # tpm2-tss
-RUN curl -sSfL https://github.com/01org/tpm2-tss/releases/download/1.2.0/tpm2-tss-1.2.0.tar.gz > tpm2-tss-1.2.0.tar.gz && \
-    tar -zxf tpm2-tss-1.2.0.tar.gz && \
-    cd tpm2-tss-1.2.0 && \
+ADD tpm2-tss-1.2.0.tar.gz tpm2-tss-1.2.0
+RUN cd tpm2-tss-1.2.0/tpm2-tss-1.2.0 && \
     ./configure --prefix=/usr && \
-    make && \
+    CXXFLAGS="-Wno-error" make && \
     make install && \
     cd && \
     rm -rf tpm2-tss-1.2.0 && \
     ldconfig
 
 # tpm2-tools
-RUN curl -sSfL https://github.com/01org/tpm2-tools/archive/2.1.0.tar.gz > tpm2-tools-2.1.0.tar.gz && \
-    tar -zxf tpm2-tools-2.1.0.tar.gz && \
-    cd tpm2-tools-2.1.0 && \
+ADD tpm2-tools-2.1.0.tar.gz tpm2-tools-2.1.0
+RUN cd tpm2-tools-2.1.0/tpm2-tools-2.1.0 && \
     ./bootstrap && \
     ./configure --prefix=/usr --disable-hardening --with-tcti-socket --with-tcti-device && \
     make && \
