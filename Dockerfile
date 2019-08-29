@@ -1,4 +1,4 @@
-FROM starlabio/ubuntu-native-build:20
+FROM starlabio/ubuntu-native-build:21
 MAINTAINER Doug Goldstein <doug@starlab.io>
 
 # bring in dependencies
