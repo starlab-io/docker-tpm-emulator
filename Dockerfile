@@ -1,5 +1,8 @@
-FROM starlabio/ubuntu-native-build:26
+FROM starlabio/ubuntu-base:1.6
 MAINTAINER Doug Goldstein <doug@starlab.io>
+
+# Install behave and hamcrest for testing
+RUN pip install behave pyhamcrest requests
 
 # bring in dependencies
 RUN apt-get update && \
@@ -25,15 +28,6 @@ ENV TCSD_USE_TCP_DEVICE=1
 
 # the trousers listens on ports 2412
 EXPOSE 2412
-
-# tpm2-emulator
-ADD ibmtpm974.tar.gz ibmtpm
-RUN cd ibmtpm && \
-    cd src && \
-    make && \
-    mv tpm_server /usr/local/bin/ && \
-    cd && \
-    rm -rf ibmtpm ibmtpm974.tar.gz
 
 # tpm2-tss
 ADD tpm2-tss-1.2.0.tar.gz tpm2-tss-1.2.0
@@ -62,3 +56,8 @@ ENV TPM2TOOLS_TCTI_NAME=socket
 # the TPM2 emulator listens on ports 2321 and 2322.
 EXPOSE 2321
 EXPOSE 2322
+
+COPY startup.sh /scripts/startup.sh
+RUN chmod +x /scripts/startup.sh
+
+ENTRYPOINT ["/scripts/startup.sh"]

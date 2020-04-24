@@ -1,28 +1,21 @@
 # tpm-emulator
 
 Provides the TPM 1.2 and TPM 2.0 tool software stack with the command
-line tools along with the TPM 1.2 and the TPM 2.0 emulator.
+line tools along with the TPM 1.2 emulator.
 
-## Running the TPM 1.2 emulator
+The TPM 1.2 emulator is running on startup. To override the default
+behavior and start the emulator manually, specify a different
+entrypoint in the `docker run` command, i.e.
+
+```bash
+docker run -it --entrypoint /bin/bash starlabio/tpm-emulator
+```
+
+## Running the TPM 1.2 emulator manually
 
 ```bash
 tpmd
 tcsd -e
-```
-
-## Running the TPM 2.0 emulator
-
-```bash
-tpm_server &
-```
-
-If you want to start with a fresh state run it with `-rm` as an option.
-
-Before any TPM command will work you must send it a startup command, with
-a real TPM it is apparently the job of the BIOS to do this.
-
-```bash
-tpm2_startup --clear
 ```
 
 ## Docker container availability
