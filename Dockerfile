@@ -2,7 +2,7 @@ FROM starlabio/ubuntu-base:1.6
 MAINTAINER Doug Goldstein <doug@starlab.io>
 
 # Install behave and hamcrest for testing
-RUN pip install behave pyhamcrest requests
+RUN pip install behave pyhamcrest requests pexpect
 
 # bring in dependencies
 RUN apt-get update && \
