@@ -56,8 +56,3 @@ ENV TPM2TOOLS_TCTI_NAME=socket
 # the TPM2 emulator listens on ports 2321 and 2322.
 EXPOSE 2321
 EXPOSE 2322
-
-COPY startup.sh /scripts/startup.sh
-RUN chmod +x /scripts/startup.sh
-
-ENTRYPOINT ["/scripts/startup.sh"]
