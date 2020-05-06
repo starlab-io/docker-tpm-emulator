@@ -12,6 +12,11 @@ RUN apt-get update && \
     apt-get clean &&  \
     rm -rf /var/lib/apt/lists* /tmp/* /var/tmp/*
 
+# add lib64 to LD_LIBRARY_PATH
+RUN echo "# RHEL lib location compatibility" >> /etc/ld.so.conf.d/lib64.conf && \
+    echo "/usr/lib64" >> /etc/ld.so.conf.d/lib64.conf && \
+    ldconfig
+
 # tpm-emulator
 RUN git clone https://github.com/PeterHuewe/tpm-emulator.git && \
     cd tpm-emulator && \
